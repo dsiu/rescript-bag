@@ -197,22 +197,22 @@ end) = struct
     fold update b (empty, empty)
 
   let compare =
-    M.compare Stdlib.compare
+    M.compare Pervasives.compare
 
   let equal =
     M.equal (==)
 
-  let to_seq =
-    M.to_seq
+(*  let to_seq =*)
+(*    M.to_seq*)
 
-  let to_seq_from =
-    M.to_seq_from
+(*  let to_seq_from =*)
+(*    M.to_seq_from*)
 
-  let add_seq s b =
-    Seq.fold_left (fun b (x, mult) -> add x ~mult b) b s
+(*  let add_seq s b =*)
+(*    Seq.fold_left (fun b (x, mult) -> add x ~mult b) b s*)
 
-  let of_seq s =
-    add_seq s empty
+(*  let of_seq s =*)
+(*    add_seq s empty*)
 
   let print print_elt fmt b =
     Format.fprintf fmt "{@[";

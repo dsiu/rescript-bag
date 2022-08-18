@@ -1,5 +1,5 @@
 
-module I = struct type t = int let compare = Stdlib.compare end
+module I = struct type t = int let compare = Pervasives.compare end
 
 module B = Bag.Make(I)
 

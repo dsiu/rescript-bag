@@ -255,18 +255,18 @@ end) : sig
 
   (** {1 Iterators} *)
 
-  val to_seq: t -> (elt * int) Seq.t
+(*  val to_seq: t -> (elt * int) Seq.t*)
   (** Iterates on the whole bag, in ascending order of elements. *)
 
-  val to_seq_from : elt -> t -> (elt * int) Seq.t
+(*  val to_seq_from : elt -> t -> (elt * int) Seq.t*)
   (** [to_seq_from x b] iterates on a subset of [b],
       in ascending order of elements, from element [x] or above. *)
 
-  val add_seq: (elt * int) Seq.t -> t -> t
+(*  val add_seq: (elt * int) Seq.t -> t -> t*)
   (** Adds the given elements to the bag, in order.
       Raises [Invalid_argument] if a multiplicity is negative. *)
 
-  val of_seq: (elt * int) Seq.t -> t
+(*  val of_seq: (elt * int) Seq.t -> t*)
   (** Builds a bag from the given elements and multiplicities.
       Raises [Invalid_argument] if a multiplicity is negative. *)
 
