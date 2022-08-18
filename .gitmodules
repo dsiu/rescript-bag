@@ -1,0 +1,3 @@
+[submodule "bag"]
+	path = bag
+	url = https://github.com/backtracking/bag

@@ -1,0 +1,45 @@
+# platform
+.DS_Store
+
+# idea
+/.idea/sonarlint/issuestore/
+
+# rescript
+.merlin
+.bsb.lock
+/lib/bs/
+
+# node
+npm-debug.log
+/node_modules/
+
+# ocaml
+*.annot
+*.cmo
+*.cma
+*.cmi
+*.a
+*.o
+*.cmx
+*.cmxs
+*.cmxa
+
+# ocamlbuild working directory
+_build/
+
+# ocamlbuild targets
+*.byte
+*.native
+
+# oasis generated files
+setup.data
+setup.log
+
+# Merlin configuring file for Vim and Emacs
+.merlin
+
+# Dune generated files
+*.install
+
+# Local OPAM switch
+_opam/
