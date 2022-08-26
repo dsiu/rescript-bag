@@ -139,6 +139,5 @@ export {
   for_all ,
   equal ,
   compare ,
-  
 }
 /* No side effect */

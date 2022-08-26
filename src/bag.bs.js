@@ -3,7 +3,6 @@
 import * as $$Map from "rescript/lib/es6/map.js";
 import * as Caml from "rescript/lib/es6/caml.js";
 import * as Curry from "rescript/lib/es6/curry.js";
-import * as Format from "rescript/lib/es6/format.js";
 import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
 import * as Caml_int32 from "rescript/lib/es6/caml_int32.js";
 import * as Pervasives from "rescript/lib/es6/pervasives.js";
@@ -112,7 +111,7 @@ function Make(funarg) {
                   }
                   var m1 = Caml_option.valFromOption(o1);
                   if (o2 !== undefined) {
-                    return Caml_option.some(Caml_obj.caml_max(m1, Caml_option.valFromOption(o2)));
+                    return Caml_option.some(Caml_obj.max(m1, Caml_option.valFromOption(o2)));
                   } else {
                     return Caml_option.some(m1);
                   }
@@ -136,7 +135,7 @@ function Make(funarg) {
   var inter = function (b1, b2) {
     return Curry._3(M.merge, (function (param, o1, o2) {
                   if (o1 !== undefined && o2 !== undefined) {
-                    return Caml_option.some(Caml_obj.caml_min(Caml_option.valFromOption(o1), Caml_option.valFromOption(o2)));
+                    return Caml_option.some(Caml_obj.min(Caml_option.valFromOption(o1), Caml_option.valFromOption(o2)));
                   }
                   
                 }), b1, b2);
@@ -167,7 +166,6 @@ function Make(funarg) {
                   return m1 <= occ(x1, b2);
                 }), b1);
   };
-  var iter = M.iter;
   var fold = M.fold;
   var split = function (x, b) {
     var match = Curry._2(M.split, x, b);
@@ -224,7 +222,7 @@ function Make(funarg) {
                 Error: new Error()
               };
         }
-        return Caml.caml_int_min(q, Caml_int32.div(m1, m2));
+        return Caml.int_min(q, Caml_int32.div(m1, m2));
       };
       var q = Curry._3(fold, update, b1, Pervasives.max_int);
       if (q <= 0) {
@@ -274,94 +272,10 @@ function Make(funarg) {
                 empty
               ]);
   };
-  var compare = Curry._1(M.compare, Caml.caml_int_compare);
+  var compare = Curry._1(M.compare, Caml.int_compare);
   var equal = Curry._1(M.equal, (function (prim0, prim1) {
           return prim0 === prim1;
         }));
-  var print = function (print_elt, fmt, b) {
-    Format.fprintf(fmt, /* Format */{
-          _0: {
-            TAG: /* Char_literal */12,
-            _0: /* '{' */123,
-            _1: {
-              TAG: /* Formatting_gen */18,
-              _0: {
-                TAG: /* Open_box */1,
-                _0: /* Format */{
-                  _0: /* End_of_format */0,
-                  _1: ""
-                }
-              },
-              _1: /* End_of_format */0
-            }
-          },
-          _1: "{@["
-        });
-    var first = {
-      contents: true
-    };
-    Curry._2(iter, (function (x, m) {
-            if (!first.contents) {
-              Format.fprintf(fmt, /* Format */{
-                    _0: {
-                      TAG: /* Char_literal */12,
-                      _0: /* ',' */44,
-                      _1: /* End_of_format */0
-                    },
-                    _1: ","
-                  });
-            }
-            first.contents = false;
-            return Curry._3(Format.fprintf(fmt, /* Format */{
-                            _0: {
-                              TAG: /* Formatting_lit */17,
-                              _0: {
-                                TAG: /* Break */0,
-                                _0: "@ ",
-                                _1: 1,
-                                _2: 0
-                              },
-                              _1: {
-                                TAG: /* Alpha */15,
-                                _0: {
-                                  TAG: /* Char_literal */12,
-                                  _0: /* ':' */58,
-                                  _1: {
-                                    TAG: /* Int */4,
-                                    _0: /* Int_d */0,
-                                    _1: /* No_padding */0,
-                                    _2: /* No_precision */0,
-                                    _3: /* End_of_format */0
-                                  }
-                                }
-                              }
-                            },
-                            _1: "@ %a:%d"
-                          }), print_elt, x, m);
-          }), b);
-    if (!first.contents) {
-      Format.fprintf(fmt, /* Format */{
-            _0: {
-              TAG: /* Char_literal */12,
-              _0: /* ' ' */32,
-              _1: /* End_of_format */0
-            },
-            _1: " "
-          });
-    }
-    return Format.fprintf(fmt, /* Format */{
-                _0: {
-                  TAG: /* Formatting_lit */17,
-                  _0: /* Close_box */0,
-                  _1: {
-                    TAG: /* Char_literal */12,
-                    _0: /* '}' */125,
-                    _1: /* End_of_format */0
-                  }
-                },
-                _1: "@]}"
-              });
-  };
   return {
           empty: empty,
           is_empty: is_empty,
@@ -390,7 +304,7 @@ function Make(funarg) {
           diff: diff,
           disjoint: disjoint,
           included: included,
-          iter: iter,
+          iter: M.iter,
           fold: fold,
           for_all: M.for_all,
           exists: M.exists,
@@ -404,13 +318,11 @@ function Make(funarg) {
           map: map,
           mapi: mapi,
           compare: compare,
-          equal: equal,
-          print: print
+          equal: equal
         };
 }
 
 export {
   Make ,
-  
 }
-/* Format Not a pure module */
+/* No side effect */
