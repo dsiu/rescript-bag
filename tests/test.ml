@@ -3,7 +3,7 @@ module I = struct type t = int let compare = Pervasives.compare end
 
 module B = Bag.Make(I)
 
-let print = B.print Format.pp_print_int
+(*let print = B.print Format.pp_print_int*)
 
 let () =
   let a = B.add 1 ~mult:1 (B.add 2 ~mult:2 (B.add 3 ~mult:3 B.empty)) in

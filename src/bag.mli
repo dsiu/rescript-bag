@@ -270,6 +270,6 @@ end) : sig
   (** Builds a bag from the given elements and multiplicities.
       Raises [Invalid_argument] if a multiplicity is negative. *)
 
-  val print: (Format.formatter -> X.t -> unit) -> Format.formatter -> t -> unit
+(*  val print: (Format.formatter -> X.t -> unit) -> Format.formatter -> t -> unit*)
 
 end

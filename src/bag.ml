@@ -214,14 +214,14 @@ end) = struct
 (*  let of_seq s =*)
 (*    add_seq s empty*)
 
-  let print print_elt fmt b =
-    Format.fprintf fmt "{@[";
-    let first = ref true in
-    iter (fun x m ->
-        if not !first then Format.fprintf fmt ",";
-        first := false;
-        Format.fprintf fmt "@ %a:%d" print_elt x m) b;
-    if not !first then Format.fprintf fmt " ";
-    Format.fprintf fmt "@]}"
+(*  let print print_elt fmt b =*)
+(*    Format.fprintf fmt "{@[";*)
+(*    let first = ref true in*)
+(*    iter (fun x m ->*)
+(*        if not !first then Format.fprintf fmt ",";*)
+(*        first := false;*)
+(*        Format.fprintf fmt "@ %a:%d" print_elt x m) b;*)
+(*    if not !first then Format.fprintf fmt " ";*)
+(*    Format.fprintf fmt "@]}"*)
 
 end
