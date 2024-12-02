@@ -33,11 +33,11 @@ module Make = (
   let mem = (elt, b) => b->M.has(elt)
 
   let find = (x, b) => {
-    b->M.findFirstBy((k, v) => k == x)
+    b->M.findFirstBy((k, _) => k == x)
   }
 
   let occ = (x, b) => {
-    find(x, b)->Option.mapOr(0, ((k, v)) => v)
+    find(x, b)->Option.mapOr(0, ((_, v)) => v)
     //    let o = find(x, b)
     //    switch o {
     //    | Some((k, v)) => v
@@ -54,7 +54,7 @@ module Make = (
     } else {
       let m = find(x, b)
       switch m {
-      | Some((k, v)) => M.set(b, x, v + mult)
+      | Some((_, v)) => M.set(b, x, v + mult)
       | None => M.set(b, x, mult)
       }
     }
@@ -191,7 +191,7 @@ module Make = (
 
   let included = (b1, b2) => M.every(b1, (x1, m1) => m1 <= occ(x1, b2))
 
-  //  let iter = M.iter
+  let iter = (f, b) => b->M.forEach(f)
 
   let fold = (f, b, acc) => M.reduce(b, acc, (acc, k, v) => f(k, v, acc))
 
@@ -216,7 +216,7 @@ module Make = (
   }
 
   let find_first_opt = (f, b) => {
-    b->M.findFirstBy((k, v) => f(k))
+    b->M.findFirstBy((k, _) => f(k))
   }
 
   let find_first = (f, b) => find_first_opt(f, b)->Option.getExn

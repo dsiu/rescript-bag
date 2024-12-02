@@ -176,11 +176,11 @@ module Make: (
       [occ x b1 <= occ x b2]. ")
   let included: (t, t) => bool
 
-  //  @ocaml.doc(" [iter f b] applies [f] to all elements in bag [b].  [f] receives the
-  //      element as first argument, and its multiplicity as second argument.
-  //      The elements are  passed to [f] in increasing order with respect to
-  //      the ordering over the type of the elements. ")
-  //  let iter: ((elt, int) => unit, t) => unit
+  @ocaml.doc(" [iter f b] applies [f] to all elements in bag [b].  [f] receives the
+        element as first argument, and its multiplicity as second argument.
+        The elements are  passed to [f] in increasing order with respect to
+        the ordering over the type of the elements. ")
+  let iter: ((elt, int) => unit, t) => unit
 
   @ocaml.doc(" [fold f b a] computes [(f xN mN ... (f x1 m1 a)...)] , where [x1 ... xN]
       are the elements in bag [b] (in increasing order), and [m1 ... mN] are
