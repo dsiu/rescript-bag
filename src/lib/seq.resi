@@ -1,19 +1,19 @@
-(**************************************************************************)
-(*                                                                        *)
-(*                                 OCaml                                  *)
-(*                                                                        *)
-(*                 Simon Cruanes                                          *)
-(*                                                                        *)
-(*   Copyright 2017 Institut National de Recherche en Informatique et     *)
-(*     en Automatique.                                                    *)
-(*                                                                        *)
-(*   All rights reserved.  This file is distributed under the terms of    *)
-(*   the GNU Lesser General Public License version 2.1, with the          *)
-(*   special exception on linking described in the file LICENSE.          *)
-(*                                                                        *)
-(**************************************************************************)
+@@ocaml.text(/* ************************************************************************ */
+/*  */
+/* OCaml */
+/*  */
+/* Simon Cruanes */
+/*  */
+/* Copyright 2017 Institut National de Recherche en Informatique et */
+/* en Automatique. */
+/*  */
+/* All rights reserved.  This file is distributed under the terms of */
+/* the GNU Lesser General Public License version 2.1, with the */
+/* special exception on linking described in the file LICENSE. */
+/*  */
+/* ************************************************************************ */
 
-(** Sequences.
+" Sequences.
 
    A sequence of type ['a Seq.t] can be thought of as a {b delayed list},
    that is, a list whose elements are computed only when they are demanded
@@ -58,8 +58,8 @@
    We normally do not point out {i when} or {i how many times}
    each function is invoked, because that would be too verbose.
    For instance, in the description of [map], we write:
-   "if [xs] is the sequence [x0; x1; ...]
-    then [map f xs] is the sequence [f x0; f x1; ...]".
+   \"if [xs] is the sequence [x0; x1; ...]
+    then [map f xs] is the sequence [f x0; f x1; ...]\".
    If we wished to be more explicit,
    we could point out that the transformation takes place on demand:
    that is, the elements of [map f xs] are computed only when they
@@ -85,25 +85,25 @@
    than sequences. Two conversion functions, {!to_dispenser} and
    {!of_dispenser}, are provided.
 
-    @since 4.07 *)
+    @since 4.07 ")
 
-type 'a t = unit -> 'a node
-(** A sequence [xs] of type ['a t] is a delayed list of elements of
+@ocaml.doc(" A sequence [xs] of type ['a t] is a delayed list of elements of
     type ['a]. Such a sequence is queried by performing a function
     application [xs()]. This function application returns a node,
     allowing the caller to determine whether the sequence is empty
-    or nonempty, and in the latter case, to obtain its head and tail. *)
+    or nonempty, and in the latter case, to obtain its head and tail. ")
+type rec t<'a> = unit => node<'a>
 
-and +'a node =
-  | Nil
-  | Cons of 'a * 'a t (**)
-(** A node is either [Nil], which means that the sequence is empty,
+@ocaml.doc(" A node is either [Nil], which means that the sequence is empty,
     or [Cons (x, xs)], which means that [x] is the first element
-    of the sequence and that [xs] is the remainder of the sequence. *)
+    of the sequence and that [xs] is the remainder of the sequence. ")
+and node<+'a> =
+  | Nil
+  | Cons('a, t<'a>)
 
-(** {1 Consuming sequences} *)
+@@ocaml.text(" {1 Consuming sequences} ")
 
-(**
+@@ocaml.text("
 
    The functions in this section consume their argument, a sequence, either
    partially or completely:
@@ -127,51 +127,50 @@ and +'a node =
    demanded, even though this element is not used.)
 
    None of the functions in this section is lazy. These functions
-   are consumers: they force some computation to take place. *)
+   are consumers: they force some computation to take place. ")
 
-val is_empty : 'a t -> bool
-(** [is_empty xs] determines whether the sequence [xs] is empty.
+@ocaml.doc(" [is_empty xs] determines whether the sequence [xs] is empty.
 
     It is recommended that the sequence [xs] be persistent.
     Indeed, [is_empty xs] demands the head of the sequence [xs],
     so, if [xs] is ephemeral, it may be the case that [xs] cannot
     be used any more after this call has taken place.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let is_empty: t<'a> => bool
 
-val uncons : 'a t -> ('a * 'a t) option
-(** If [xs] is empty, then [uncons xs] is [None].
+@ocaml.doc(" If [xs] is empty, then [uncons xs] is [None].
 
     If [xs] is nonempty, then [uncons xs] is [Some (x, ys)] where [x] is the
     head of the sequence and [ys] its tail.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let uncons: t<'a> => option<('a, t<'a>)>
 
-val length : 'a t -> int
-(** [length xs] is the length of the sequence [xs].
+@ocaml.doc(" [length xs] is the length of the sequence [xs].
 
     The sequence [xs] must be finite.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let length: t<'a> => int
 
-val iter : ('a -> unit) -> 'a t -> unit
-(** [iter f xs] invokes [f x] successively
+@ocaml.doc(" [iter f xs] invokes [f x] successively
     for every element [x] of the sequence [xs],
     from left to right.
 
-    It terminates only if the sequence [xs] is finite. *)
+    It terminates only if the sequence [xs] is finite. ")
+let iter: ('a => unit, t<'a>) => unit
 
-val fold_left : ('a -> 'b -> 'a) -> 'a -> 'b t -> 'a
-(** [fold_left f _ xs] invokes [f _ x] successively
+@ocaml.doc(" [fold_left f _ xs] invokes [f _ x] successively
     for every element [x] of the sequence [xs],
     from left to right.
 
     An accumulator of type ['a] is threaded through the calls to [f].
 
-    It terminates only if the sequence [xs] is finite. *)
+    It terminates only if the sequence [xs] is finite. ")
+let fold_left: (('a, 'b) => 'a, 'a, t<'b>) => 'a
 
-val iteri : (int -> 'a -> unit) -> 'a t -> unit
-(** [iteri f xs] invokes [f i x] successively
+@ocaml.doc(" [iteri f xs] invokes [f i x] successively
     for every element [x] located at index [i] in the sequence [xs].
 
     It terminates only if the sequence [xs] is finite.
@@ -179,10 +178,10 @@ val iteri : (int -> 'a -> unit) -> 'a t -> unit
     [iteri f xs] is equivalent to
     [iter (fun (i, x) -> f i x) (zip (ints 0) xs)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let iteri: ((int, 'a) => unit, t<'a>) => unit
 
-val fold_lefti : ('b -> int -> 'a -> 'b) -> 'b -> 'a t -> 'b
-(** [fold_lefti f _ xs] invokes [f _ i x] successively
+@ocaml.doc(" [fold_lefti f _ xs] invokes [f _ i x] successively
     for every element [x] located at index [i] of the sequence [xs].
 
     An accumulator of type ['b] is threaded through the calls to [f].
@@ -192,36 +191,36 @@ val fold_lefti : ('b -> int -> 'a -> 'b) -> 'b -> 'a t -> 'b
     [fold_lefti f accu xs] is equivalent to
     [fold_left (fun accu (i, x) -> f accu i x) accu (zip (ints 0) xs)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let fold_lefti: (('b, int, 'a) => 'b, 'b, t<'a>) => 'b
 
-val for_all : ('a -> bool) -> 'a t -> bool
-(** [for_all p xs] determines whether all elements [x] of the sequence [xs]
+@ocaml.doc(" [for_all p xs] determines whether all elements [x] of the sequence [xs]
     satisfy [p x].
 
     The sequence [xs] must be finite.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let for_all: ('a => bool, t<'a>) => bool
 
-val exists : ('a -> bool) -> 'a t -> bool
-(** [exists xs p] determines whether at least one element [x]
+@ocaml.doc(" [exists xs p] determines whether at least one element [x]
     of the sequence [xs] satisfies [p x].
 
     The sequence [xs] must be finite.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let exists: ('a => bool, t<'a>) => bool
 
-val find : ('a -> bool) -> 'a t -> 'a option
-(** [find p xs] returns [Some x], where [x] is the first element of the
+@ocaml.doc(" [find p xs] returns [Some x], where [x] is the first element of the
     sequence [xs] that satisfies [p x], if there is such an element.
 
     It returns [None] if there is no such element.
 
     The sequence [xs] must be finite.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let find: ('a => bool, t<'a>) => option<'a>
 
-val find_map : ('a -> 'b option) -> 'a t -> 'b option
-(** [find_map f xs] returns [Some y], where [x] is the first element of the
+@ocaml.doc(" [find_map f xs] returns [Some y], where [x] is the first element of the
     sequence [xs] such that [f x = Some _], if there is such an element,
     and where [y] is defined by [f x = Some y].
 
@@ -229,10 +228,10 @@ val find_map : ('a -> 'b option) -> 'a t -> 'b option
 
     The sequence [xs] must be finite.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let find_map: ('a => option<'b>, t<'a>) => option<'b>
 
-val iter2 : ('a -> 'b -> unit) -> 'a t -> 'b t -> unit
-(** [iter2 f xs ys] invokes [f x y] successively for every pair [(x, y)] of
+@ocaml.doc(" [iter2 f xs ys] invokes [f x y] successively for every pair [(x, y)] of
     elements drawn synchronously from the sequences [xs] and [ys].
 
     If the sequences [xs] and [ys] have different lengths, then
@@ -245,10 +244,10 @@ val iter2 : ('a -> 'b -> unit) -> 'a t -> 'b t -> unit
     [iter2 f xs ys] is equivalent to
     [iter (fun (x, y) -> f x y) (zip xs ys)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let iter2: (('a, 'b) => unit, t<'a>, t<'b>) => unit
 
-val fold_left2 : ('a -> 'b -> 'c -> 'a) -> 'a -> 'b t -> 'c t -> 'a
-(** [fold_left2 f _ xs ys] invokes [f _ x y] successively
+@ocaml.doc(" [fold_left2 f _ xs ys] invokes [f _ x y] successively
     for every pair [(x, y)] of elements drawn synchronously
     from the sequences [xs] and [ys].
 
@@ -264,10 +263,10 @@ val fold_left2 : ('a -> 'b -> 'c -> 'a) -> 'a -> 'b t -> 'c t -> 'a
     [fold_left2 f accu xs ys] is equivalent to
     [fold_left (fun accu (x, y) -> f accu x y) (zip xs ys)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let fold_left2: (('a, 'b, 'c) => 'a, 'a, t<'b>, t<'c>) => 'a
 
-val for_all2 : ('a -> 'b -> bool) -> 'a t -> 'b t -> bool
-(** [for_all2 p xs ys] determines whether all pairs [(x, y)] of elements
+@ocaml.doc(" [for_all2 p xs ys] determines whether all pairs [(x, y)] of elements
     drawn synchronously from the sequences [xs] and [ys] satisfy [p x y].
 
     If the sequences [xs] and [ys] have different lengths, then
@@ -282,10 +281,10 @@ val for_all2 : ('a -> 'b -> bool) -> 'a t -> 'b t -> bool
 
     [for_all2 p xs ys] is equivalent to [for_all (fun b -> b) (map2 p xs ys)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let for_all2: (('a, 'b) => bool, t<'a>, t<'b>) => bool
 
-val exists2 : ('a -> 'b -> bool) -> 'a t -> 'b t -> bool
-(** [exists2 p xs ys] determines whether some pair [(x, y)] of elements
+@ocaml.doc(" [exists2 p xs ys] determines whether some pair [(x, y)] of elements
     drawn synchronously from the sequences [xs] and [ys] satisfies [p x y].
 
     If the sequences [xs] and [ys] have different lengths, then
@@ -296,19 +295,19 @@ val exists2 : ('a -> 'b -> bool) -> 'a t -> 'b t -> bool
 
     [exists2 p xs ys] is equivalent to [exists (fun b -> b) (map2 p xs ys)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let exists2: (('a, 'b) => bool, t<'a>, t<'b>) => bool
 
-val equal : ('a -> 'b -> bool) -> 'a t -> 'b t -> bool
-(** Provided the function [eq] defines an equality on elements,
+@ocaml.doc(" Provided the function [eq] defines an equality on elements,
     [equal eq xs ys] determines whether the sequences [xs] and [ys]
     are pointwise equal.
 
     At least one of the sequences [xs] and [ys] must be finite.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let equal: (('a, 'b) => bool, t<'a>, t<'b>) => bool
 
-val compare : ('a -> 'b -> int) -> 'a t -> 'b t -> int
-(** Provided the function [cmp] defines a preorder on elements,
+@ocaml.doc(" Provided the function [cmp] defines a preorder on elements,
     [compare cmp xs ys] compares the sequences [xs] and [ys]
     according to the lexicographic preorder.
 
@@ -316,23 +315,23 @@ val compare : ('a -> 'b -> int) -> 'a t -> 'b t -> int
 
     At least one of the sequences [xs] and [ys] must be finite.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let compare: (('a, 'b) => int, t<'a>, t<'b>) => int
 
-(** {1 Constructing sequences} *)
+@@ocaml.text(" {1 Constructing sequences} ")
 
-(** The functions in this section are lazy: that is, they return sequences
-    whose elements are computed only when demanded. *)
+@@ocaml.text(" The functions in this section are lazy: that is, they return sequences
+    whose elements are computed only when demanded. ")
 
-val empty : 'a t
-(** [empty] is the empty sequence.
-    It has no elements. Its length is 0. *)
+@ocaml.doc(" [empty] is the empty sequence.
+    It has no elements. Its length is 0. ")
+let empty: t<'a>
 
-val return : 'a -> 'a t
-(** [return x] is the sequence whose sole element is [x].
-    Its length is 1. *)
+@ocaml.doc(" [return x] is the sequence whose sole element is [x].
+    Its length is 1. ")
+let return: 'a => t<'a>
 
-val cons : 'a -> 'a t -> 'a t
-(** [cons x xs] is the sequence that begins with the element [x],
+@ocaml.doc(" [cons x xs] is the sequence that begins with the element [x],
     followed with the sequence [xs].
 
     Writing [cons (f()) xs] causes the function call [f()]
@@ -340,10 +339,10 @@ val cons : 'a -> 'a t -> 'a t
     sequence is queried, one must instead write
     [(fun () -> Cons(f(), xs))].
 
-    @since 4.11 *)
+    @since 4.11 ")
+let cons: ('a, t<'a>) => t<'a>
 
-val init : int -> (int -> 'a) -> 'a t
-(** [init n f] is the sequence [f 0; f 1; ...; f (n-1)].
+@ocaml.doc(" [init n f] is the sequence [f 0; f 1; ...; f (n-1)].
 
     [n] must be nonnegative.
 
@@ -352,10 +351,10 @@ val init : int -> (int -> 'a) -> 'a t
 
     @raise Invalid_argument if [n] is negative.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let init: (int, int => 'a) => t<'a>
 
-val unfold : ('b -> ('a * 'b) option) -> 'b -> 'a t
-(** [unfold] constructs a sequence
+@ocaml.doc(" [unfold] constructs a sequence
     out of a step function and an initial state.
 
     If [f u] is [None] then
@@ -366,18 +365,18 @@ val unfold : ('b -> ('a * 'b) option) -> 'b -> 'a t
     For example, [unfold (function [] -> None | h :: t -> Some (h, t)) l]
     is equivalent to [List.to_seq l].
 
-    @since 4.11 *)
+    @since 4.11 ")
+let unfold: ('b => option<('a, 'b)>, 'b) => t<'a>
 
-val repeat : 'a -> 'a t
-(** [repeat x] is the infinite sequence
+@ocaml.doc(" [repeat x] is the infinite sequence
     where the element [x] is repeated indefinitely.
 
     [repeat x] is equivalent to [cycle (return x)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let repeat: 'a => t<'a>
 
-val forever : (unit -> 'a) -> 'a t
-(** [forever f] is an infinite sequence where every element is produced
+@ocaml.doc(" [forever f] is an infinite sequence where every element is produced
     (on demand) by the function call [f()].
 
     For instance,
@@ -385,10 +384,10 @@ val forever : (unit -> 'a) -> 'a t
 
     [forever f] is equivalent to [map f (repeat ())].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let forever: (unit => 'a) => t<'a>
 
-val cycle : 'a t -> 'a t
-(** [cycle xs] is the infinite sequence that consists of an infinite
+@ocaml.doc(" [cycle xs] is the infinite sequence that consists of an infinite
     number of repetitions of the sequence [xs].
 
     If [xs] is an empty sequence,
@@ -398,53 +397,53 @@ val cycle : 'a t -> 'a t
     can cause the sequence [xs] to be consumed more than once.
     Therefore, [xs] must be persistent.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let cycle: t<'a> => t<'a>
 
-val iterate : ('a -> 'a) -> 'a -> 'a t
-(** [iterate f x] is the infinite sequence whose elements are
+@ocaml.doc(" [iterate f x] is the infinite sequence whose elements are
     [x], [f x], [f (f x)], and so on.
 
     In other words, it is the orbit of the function [f],
     starting at [x].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let iterate: ('a => 'a, 'a) => t<'a>
 
-(** {1 Transforming sequences} *)
+@@ocaml.text(" {1 Transforming sequences} ")
 
-(** The functions in this section are lazy: that is, they return sequences
-    whose elements are computed only when demanded. *)
+@@ocaml.text(" The functions in this section are lazy: that is, they return sequences
+    whose elements are computed only when demanded. ")
 
-val map : ('a -> 'b) -> 'a t -> 'b t
-(** [map f xs] is the image of the sequence [xs] through the
+@ocaml.doc(" [map f xs] is the image of the sequence [xs] through the
     transformation [f].
 
     If [xs] is the sequence [x0; x1; ...] then
-    [map f xs] is the sequence [f x0; f x1; ...]. *)
+    [map f xs] is the sequence [f x0; f x1; ...]. ")
+let map: ('a => 'b, t<'a>) => t<'b>
 
-val mapi : (int -> 'a -> 'b) -> 'a t -> 'b t
-(** [mapi] is analogous to [map], but applies the function [f] to
+@ocaml.doc(" [mapi] is analogous to [map], but applies the function [f] to
     an index and an element.
 
     [mapi f xs] is equivalent to [map2 f (ints 0) xs].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let mapi: ((int, 'a) => 'b, t<'a>) => t<'b>
 
-val filter : ('a -> bool) -> 'a t -> 'a t
-(** [filter p xs] is the sequence of the elements [x] of [xs]
+@ocaml.doc(" [filter p xs] is the sequence of the elements [x] of [xs]
     that satisfy [p x].
 
     In other words, [filter p xs] is the sequence [xs],
-    deprived of the elements [x] such that [p x] is false. *)
+    deprived of the elements [x] such that [p x] is false. ")
+let filter: ('a => bool, t<'a>) => t<'a>
 
-val filter_map : ('a -> 'b option) -> 'a t -> 'b t
-(** [filter_map f xs] is the sequence of the elements [y] such that
+@ocaml.doc(" [filter_map f xs] is the sequence of the elements [y] such that
     [f x = Some y], where [x] ranges over [xs].
 
     [filter_map f xs] is equivalent to
-    [map Option.get (filter Option.is_some (map f xs))]. *)
+    [map Option.get (filter Option.is_some (map f xs))]. ")
+let filter_map: ('a => option<'b>, t<'a>) => t<'b>
 
-val scan : ('b -> 'a -> 'b) -> 'b -> 'a t -> 'b t
-(** If [xs] is a sequence [[x0; x1; x2; ...]], then
+@ocaml.doc(" If [xs] is a sequence [[x0; x1; x2; ...]], then
     [scan f a0 xs] is a sequence of accumulators
     [[a0; a1; a2; ...]]
     where [a1] is [f a0 x0], [a2] is [f a1 x1], and so on.
@@ -460,10 +459,10 @@ val scan : ('b -> 'a -> 'b) -> 'b -> 'a t -> 'b t
     If [xs] has length [n]
     then [scan f a0 xs] has length [n+1].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let scan: (('b, 'a) => 'b, 'b, t<'a>) => t<'b>
 
-val take : int -> 'a t -> 'a t
-(** [take n xs] is the sequence of the first [n] elements of [xs].
+@ocaml.doc(" [take n xs] is the sequence of the first [n] elements of [xs].
 
     If [xs] has fewer than [n] elements,
     then [take n xs] is equivalent to [xs].
@@ -472,10 +471,10 @@ val take : int -> 'a t -> 'a t
 
     @raise Invalid_argument if [n] is negative.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let take: (int, t<'a>) => t<'a>
 
-val drop : int -> 'a t -> 'a t
-(** [drop n xs] is the sequence [xs], deprived of its first [n] elements.
+@ocaml.doc(" [drop n xs] is the sequence [xs], deprived of its first [n] elements.
 
     If [xs] has fewer than [n] elements,
     then [drop n xs] is empty.
@@ -489,22 +488,22 @@ val drop : int -> 'a t -> 'a t
 
     @raise Invalid_argument if [n] is negative.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let drop: (int, t<'a>) => t<'a>
 
-val take_while : ('a -> bool) -> 'a t -> 'a t
-(** [take_while p xs] is the longest prefix of the sequence [xs]
+@ocaml.doc(" [take_while p xs] is the longest prefix of the sequence [xs]
     where every element [x] satisfies [p x].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let take_while: ('a => bool, t<'a>) => t<'a>
 
-val drop_while : ('a -> bool) -> 'a t -> 'a t
-(** [drop_while p xs] is the sequence [xs], deprived of the prefix
+@ocaml.doc(" [drop_while p xs] is the sequence [xs], deprived of the prefix
     [take_while p xs].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let drop_while: ('a => bool, t<'a>) => t<'a>
 
-val group : ('a -> 'a -> bool) -> 'a t -> 'a t t
-(** Provided the function [eq] defines an equality on elements,
+@ocaml.doc(" Provided the function [eq] defines an equality on elements,
     [group eq xs] is the sequence of the maximal runs
     of adjacent duplicate elements of the sequence [xs].
 
@@ -516,10 +515,10 @@ val group : ('a -> 'a -> bool) -> 'a t -> 'a t t
     can cause [xs] to be consumed more than once. Therefore, [xs] must be
     persistent.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let group: (('a, 'a) => bool, t<'a>) => t<t<'a>>
 
-val memoize : 'a t -> 'a t
-(** The sequence [memoize xs] has the same elements as the sequence [xs].
+@ocaml.doc(" The sequence [memoize xs] has the same elements as the sequence [xs].
 
     Regardless of whether [xs] is ephemeral or persistent,
     [memoize xs] is persistent: even if it is queried several times,
@@ -530,16 +529,17 @@ val memoize : 'a t -> 'a t
     {i not} thread-safe. Therefore, the sequence [memoize xs]
     must {i not} be queried by multiple threads concurrently.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let memoize: t<'a> => t<'a>
 
-exception Forced_twice
-(** This exception is raised when a sequence returned by {!once}
+@ocaml.doc(" This exception is raised when a sequence returned by {!once}
     (or a suffix of it) is queried more than once.
 
-    @since 4.14 *)
+    @since 4.14 ")
+exception Forced_twice
 
-(*val once : 'a t -> 'a t*)
-(** The sequence [once xs] has the same elements as the sequence [xs].
+@@ocaml.text(/* val once : 'a t -> 'a t */
+" The sequence [once xs] has the same elements as the sequence [xs].
 
     Regardless of whether [xs] is ephemeral or persistent,
     [once xs] is an ephemeral sequence: it can be queried at most once.
@@ -550,10 +550,9 @@ exception Forced_twice
     @raise Forced_twice if [once xs], or a suffix of it,
            is queried more than once.
 
-    @since 4.14 *)
+    @since 4.14 ")
 
-val transpose : 'a t t -> 'a t t
-(** If [xss] is a matrix (a sequence of rows), then [transpose xss] is
+@ocaml.doc(" If [xss] is a matrix (a sequence of rows), then [transpose xss] is
     the sequence of the columns of the matrix [xss].
 
     The rows of the matrix [xss] are not required to have the same length.
@@ -562,38 +561,38 @@ val transpose : 'a t t -> 'a t t
 
     The matrix [xss] must be persistent.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let transpose: t<t<'a>> => t<t<'a>>
 
-(** {1 Combining sequences} *)
+@@ocaml.text(" {1 Combining sequences} ")
 
-val append : 'a t -> 'a t -> 'a t
-(** [append xs ys] is the concatenation of the sequences [xs] and [ys].
+@ocaml.doc(" [append xs ys] is the concatenation of the sequences [xs] and [ys].
 
     Its elements are the elements of [xs], followed by the elements of [ys].
 
-    @since 4.11 *)
+    @since 4.11 ")
+let append: (t<'a>, t<'a>) => t<'a>
 
-val concat : 'a t t -> 'a t
-(** If [xss] is a sequence of sequences,
+@ocaml.doc(" If [xss] is a sequence of sequences,
     then [concat xss] is its concatenation.
 
     If [xss] is the sequence [xs0; xs1; ...] then
     [concat xss] is the sequence [xs0 @ xs1 @ ...].
 
-    @since 4.13 *)
+    @since 4.13 ")
+let concat: t<t<'a>> => t<'a>
 
-val flat_map : ('a -> 'b t) -> 'a t -> 'b t
-(** [flat_map f xs] is equivalent to [concat (map f xs)]. *)
+@ocaml.doc(" [flat_map f xs] is equivalent to [concat (map f xs)]. ")
+let flat_map: ('a => t<'b>, t<'a>) => t<'b>
 
-val concat_map : ('a -> 'b t) -> 'a t -> 'b t
-(** [concat_map f xs] is equivalent to [concat (map f xs)].
+@ocaml.doc(" [concat_map f xs] is equivalent to [concat (map f xs)].
 
     [concat_map] is an alias for [flat_map].
 
-    @since 4.13 *)
+    @since 4.13 ")
+let concat_map: ('a => t<'b>, t<'a>) => t<'b>
 
-val zip : 'a t -> 'b t -> ('a * 'b) t
-(** [zip xs ys] is the sequence of pairs [(x, y)]
+@ocaml.doc(" [zip xs ys] is the sequence of pairs [(x, y)]
     drawn synchronously from the sequences [xs] and [ys].
 
     If the sequences [xs] and [ys] have different lengths, then
@@ -602,10 +601,10 @@ val zip : 'a t -> 'b t -> ('a * 'b) t
 
     [zip xs ys] is equivalent to [map2 (fun a b -> (a, b)) xs ys].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let zip: (t<'a>, t<'b>) => t<('a, 'b)>
 
-val map2 : ('a -> 'b -> 'c) -> 'a t -> 'b t -> 'c t
-(** [map2 f xs ys] is the sequence of the elements [f x y],
+@ocaml.doc(" [map2 f xs ys] is the sequence of the elements [f x y],
     where the pairs [(x, y)] are drawn synchronously from the
     sequences [xs] and [ys].
 
@@ -615,28 +614,28 @@ val map2 : ('a -> 'b -> 'c) -> 'a t -> 'b t -> 'c t
 
     [map2 f xs ys] is equivalent to [map (fun (x, y) -> f x y) (zip xs ys)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let map2: (('a, 'b) => 'c, t<'a>, t<'b>) => t<'c>
 
-val interleave : 'a t -> 'a t -> 'a t
-(** [interleave xs ys] is the sequence that begins with the first element of
+@ocaml.doc(" [interleave xs ys] is the sequence that begins with the first element of
     [xs], continues with the first element of [ys], and so on.
 
     When one of the sequences [xs] and [ys] is exhausted,
     [interleave xs ys] continues with the rest of the other sequence.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let interleave: (t<'a>, t<'a>) => t<'a>
 
-val sorted_merge : ('a -> 'a -> int) -> 'a t -> 'a t -> 'a t
-(** If the sequences [xs] and [ys] are sorted according to the total preorder
+@ocaml.doc(" If the sequences [xs] and [ys] are sorted according to the total preorder
     [cmp], then [sorted_merge cmp xs ys] is the sorted sequence obtained by
     merging the sequences [xs] and [ys].
 
     For more details on comparison functions, see {!Array.sort}.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let sorted_merge: (('a, 'a) => int, t<'a>, t<'a>) => t<'a>
 
-val product : 'a t -> 'b t -> ('a * 'b) t
-(** [product xs ys] is the Cartesian product of the sequences [xs] and [ys].
+@ocaml.doc(" [product xs ys] is the Cartesian product of the sequences [xs] and [ys].
 
     For every element [x] of [xs] and for every element [y] of [ys],
     the pair [(x, y)] appears once as an element of [product xs ys].
@@ -647,10 +646,10 @@ val product : 'a t -> 'b t -> ('a * 'b) t
 
     The sequences [xs] and [ys] must be persistent.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let product: (t<'a>, t<'b>) => t<('a, 'b)>
 
-val map_product : ('a -> 'b -> 'c) -> 'a t -> 'b t -> 'c t
-(** The sequence [map_product f xs ys] is the image through [f]
+@ocaml.doc(" The sequence [map_product f xs ys] is the image through [f]
     of the Cartesian product of the sequences [xs] and [ys].
 
     For every element [x] of [xs] and for every element [y] of [ys],
@@ -665,12 +664,12 @@ val map_product : ('a -> 'b -> 'c) -> 'a t -> 'b t -> 'c t
     [map_product f xs ys] is equivalent to
     [map (fun (x, y) -> f x y) (product xs ys)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let map_product: (('a, 'b) => 'c, t<'a>, t<'b>) => t<'c>
 
-(** {1 Splitting a sequence into two sequences} *)
+@@ocaml.text(" {1 Splitting a sequence into two sequences} ")
 
-val unzip : ('a * 'b) t -> 'a t * 'b t
-(** [unzip] transforms a sequence of pairs into a pair of sequences.
+@ocaml.doc(" [unzip] transforms a sequence of pairs into a pair of sequences.
 
     [unzip xs] is equivalent to [(map fst xs, map snd xs)].
 
@@ -681,15 +680,15 @@ val unzip : ('a * 'b) t -> 'a t * 'b t
     Thus, [xs] must be persistent and cheap.
     If that is not the case, use [unzip (memoize xs)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let unzip: t<('a, 'b)> => (t<'a>, t<'b>)
 
-val split : ('a * 'b) t -> 'a t * 'b t
-(** [split] is an alias for [unzip].
+@ocaml.doc(" [split] is an alias for [unzip].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let split: t<('a, 'b)> => (t<'a>, t<'b>)
 
-val partition_map : ('a -> ('b, 'c) Either.t) -> 'a t -> 'b t * 'c t
-(** [partition_map f xs] returns a pair of sequences [(ys, zs)], where:
+@ocaml.doc(" [partition_map f xs] returns a pair of sequences [(ys, zs)], where:
 
     - [ys] is the sequence of the elements [y] such that
       [f x = Left y], where [x] ranges over [xs];
@@ -708,10 +707,10 @@ val partition_map : ('a -> ('b, 'c) Either.t) -> 'a t -> 'b t * 'c t
     Thus, [xs] must be persistent and cheap.
     If that is not the case, use [partition_map f (memoize xs)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let partition_map: ('a => Either.t<'b, 'c>, t<'a>) => (t<'b>, t<'c>)
 
-val partition : ('a -> bool) -> 'a t -> 'a t * 'a t
-(** [partition p xs] returns a pair of the subsequence of the elements
+@ocaml.doc(" [partition p xs] returns a pair of the subsequence of the elements
     of [xs] that satisfy [p] and the subsequence of the elements of
     [xs] that do not satisfy [p].
 
@@ -725,38 +724,39 @@ val partition : ('a -> bool) -> 'a t -> 'a t * 'a t
     Furthermore, [xs] should be persistent and cheap.
     If that is not the case, use [partition p (memoize xs)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let partition: ('a => bool, t<'a>) => (t<'a>, t<'a>)
 
-(** {1 Converting between sequences and dispensers} *)
+@@ocaml.text(" {1 Converting between sequences and dispensers} ")
 
-(** A dispenser is a representation of a sequence as a function of type
+@@ocaml.text(" A dispenser is a representation of a sequence as a function of type
     [unit -> 'a option]. Every time this function is invoked, it returns
     the next element of the sequence. When there are no more elements,
     it returns [None]. A dispenser has mutable internal state, therefore
     is ephemeral: the sequence that it represents can be consumed at most
-    once. *)
+    once. ")
 
-val of_dispenser : (unit -> 'a option) -> 'a t
-(** [of_dispenser it] is the sequence of the elements produced by the
+@ocaml.doc(" [of_dispenser it] is the sequence of the elements produced by the
     dispenser [it]. It is an ephemeral sequence: it can be consumed at most
     once. If a persistent sequence is needed, use
     [memoize (of_dispenser it)].
 
-    @since 4.14 *)
+    @since 4.14 ")
+let of_dispenser: (unit => option<'a>) => t<'a>
 
-val to_dispenser : 'a t -> (unit -> 'a option)
-(** [to_dispenser xs] is a fresh dispenser on the sequence [xs].
+@ocaml.doc(" [to_dispenser xs] is a fresh dispenser on the sequence [xs].
 
     This dispenser has mutable internal state,
     which is not protected by a lock;
     so, it must not be used by several threads concurrently.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let to_dispenser: (t<'a>, unit) => option<'a>
 
-(** {1 Sequences of integers} *)
+@@ocaml.text(" {1 Sequences of integers} ")
 
-val ints : int -> int t
-(** [ints i] is the infinite sequence of the integers beginning at [i] and
+@ocaml.doc(" [ints i] is the infinite sequence of the integers beginning at [i] and
     counting up.
 
-    @since 4.14 *)
+    @since 4.14 ")
+let ints: int => t<int>

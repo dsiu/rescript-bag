@@ -21,8 +21,8 @@ if (Curry._1(B.cardinal, a) !== 6) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          11,
+          "test.res",
+          13,
           2
         ],
         Error: new Error()
@@ -33,8 +33,8 @@ if (Curry._1(B.cardinal, Curry._2(B.sum, a, b)) !== 21) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          12,
+          "test.res",
+          14,
           2
         ],
         Error: new Error()
@@ -45,8 +45,8 @@ if (Curry._1(B.cardinal, Curry._2(B.union, a, b)) !== 15) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          13,
+          "test.res",
+          15,
           2
         ],
         Error: new Error()
@@ -57,8 +57,8 @@ if (!Curry._1(B.is_empty, Curry._2(B.diff, a, b))) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          14,
+          "test.res",
+          16,
           2
         ],
         Error: new Error()
@@ -69,8 +69,8 @@ if (Curry._1(B.cardinal, Curry._2(B.diff, b, a)) !== 9) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          15,
+          "test.res",
+          17,
           2
         ],
         Error: new Error()
@@ -81,8 +81,8 @@ if (!Curry._2(B.equal, Curry._2(B.inter, a, b), a)) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          16,
+          "test.res",
+          18,
           2
         ],
         Error: new Error()
@@ -93,8 +93,8 @@ if (!Curry._2(B.included, a, b)) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          17,
+          "test.res",
+          19,
           2
         ],
         Error: new Error()
@@ -105,8 +105,8 @@ if (Curry._2(B.included, b, a)) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          18,
+          "test.res",
+          20,
           2
         ],
         Error: new Error()
@@ -117,8 +117,8 @@ if (Curry._2(B.disjoint, b, a)) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          19,
+          "test.res",
+          21,
           2
         ],
         Error: new Error()
@@ -147,8 +147,8 @@ if (!Caml_obj.equal(Curry._1(B.elements, a), {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          20,
+          "test.res",
+          22,
           2
         ],
         Error: new Error()
@@ -162,8 +162,8 @@ if (!Caml_obj.equal(Curry._1(B.min_elt, a), [
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          21,
+          "test.res",
+          23,
           2
         ],
         Error: new Error()
@@ -177,8 +177,8 @@ if (!Caml_obj.equal(Curry._1(B.max_elt, a), [
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          22,
+          "test.res",
+          24,
           2
         ],
         Error: new Error()
@@ -193,8 +193,8 @@ if (Curry._1(B.cardinal, Curry._2(B.map, f, a)) !== 3) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          24,
+          "test.res",
+          26,
           2
         ],
         Error: new Error()
@@ -205,8 +205,8 @@ if (Curry._1(B.cardinal, Curry._2(B.map, f, b)) !== 3) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          25,
+          "test.res",
+          27,
           2
         ],
         Error: new Error()
@@ -224,8 +224,8 @@ if (!Caml_obj.equal(Curry._1(B.min_elt, e), [
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          27,
+          "test.res",
+          29,
           2
         ],
         Error: new Error()
@@ -239,8 +239,8 @@ if (!Caml_obj.equal(Curry._1(B.max_elt, e), [
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          28,
+          "test.res",
+          30,
           2
         ],
         Error: new Error()
@@ -254,8 +254,8 @@ if (!Caml_obj.equal(Curry._1(B.choose, e), [
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          29,
+          "test.res",
+          31,
           2
         ],
         Error: new Error()
@@ -266,8 +266,8 @@ if (Curry._1(B.cardinal, e) !== 2) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          30,
+          "test.res",
+          32,
           2
         ],
         Error: new Error()
@@ -285,8 +285,8 @@ if (!Caml_obj.equal(Curry._1(B.min_elt, o), [
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          33,
+          "test.res",
+          34,
           2
         ],
         Error: new Error()
@@ -300,8 +300,8 @@ if (!Caml_obj.equal(Curry._1(B.max_elt, o), [
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          34,
+          "test.res",
+          35,
           2
         ],
         Error: new Error()
@@ -312,8 +312,8 @@ if (Curry._1(B.cardinal, o) !== 10) {
   throw {
         RE_EXN_ID: "Assert_failure",
         _1: [
-          "test.ml",
-          35,
+          "test.res",
+          36,
           2
         ],
         Error: new Error()
@@ -329,8 +329,8 @@ function test(n) {
       throw {
             RE_EXN_ID: "Assert_failure",
             _1: [
-              "test.ml",
-              43,
+              "test.res",
+              45,
               4
             ],
             Error: new Error()
@@ -341,8 +341,8 @@ function test(n) {
       throw {
             RE_EXN_ID: "Assert_failure",
             _1: [
-              "test.ml",
-              45,
+              "test.res",
+              47,
               4
             ],
             Error: new Error()
@@ -353,9 +353,9 @@ function test(n) {
       throw {
             RE_EXN_ID: "Assert_failure",
             _1: [
-              "test.ml",
-              47,
-              20
+              "test.res",
+              50,
+              6
             ],
             Error: new Error()
           };
@@ -366,8 +366,8 @@ function test(n) {
     throw {
           RE_EXN_ID: "Assert_failure",
           _1: [
-            "test.ml",
-            49,
+            "test.res",
+            53,
             2
           ],
           Error: new Error()
@@ -377,8 +377,8 @@ function test(n) {
     throw {
           RE_EXN_ID: "Assert_failure",
           _1: [
-            "test.ml",
-            50,
+            "test.res",
+            54,
             2
           ],
           Error: new Error()
@@ -388,8 +388,8 @@ function test(n) {
     throw {
           RE_EXN_ID: "Assert_failure",
           _1: [
-            "test.ml",
-            51,
+            "test.res",
+            55,
             2
           ],
           Error: new Error()
@@ -399,8 +399,8 @@ function test(n) {
     throw {
           RE_EXN_ID: "Assert_failure",
           _1: [
-            "test.ml",
-            52,
+            "test.res",
+            56,
             2
           ],
           Error: new Error()
@@ -410,8 +410,8 @@ function test(n) {
     throw {
           RE_EXN_ID: "Assert_failure",
           _1: [
-            "test.ml",
-            53,
+            "test.res",
+            57,
             2
           ],
           Error: new Error()
@@ -423,8 +423,8 @@ function test(n) {
     throw {
           RE_EXN_ID: "Assert_failure",
           _1: [
-            "test.ml",
-            54,
+            "test.res",
+            58,
             2
           ],
           Error: new Error()
@@ -436,8 +436,8 @@ function test(n) {
     throw {
           RE_EXN_ID: "Assert_failure",
           _1: [
-            "test.ml",
-            55,
+            "test.res",
+            59,
             2
           ],
           Error: new Error()
@@ -453,8 +453,8 @@ function test(n) {
     throw {
           RE_EXN_ID: "Assert_failure",
           _1: [
-            "test.ml",
-            56,
+            "test.res",
+            60,
             2
           ],
           Error: new Error()
@@ -468,8 +468,8 @@ function test(n) {
     throw {
           RE_EXN_ID: "Assert_failure",
           _1: [
-            "test.ml",
-            61,
+            "test.res",
+            65,
             2
           ],
           Error: new Error()
@@ -479,8 +479,8 @@ function test(n) {
     throw {
           RE_EXN_ID: "Assert_failure",
           _1: [
-            "test.ml",
-            62,
+            "test.res",
+            66,
             2
           ],
           Error: new Error()
@@ -507,8 +507,8 @@ function test$1(n) {
     throw {
           RE_EXN_ID: "Assert_failure",
           _1: [
-            "test.ml",
-            82,
+            "test.res",
+            88,
             2
           ],
           Error: new Error()
@@ -519,8 +519,8 @@ function test$1(n) {
     throw {
           RE_EXN_ID: "Assert_failure",
           _1: [
-            "test.ml",
-            84,
+            "test.res",
+            90,
             2
           ],
           Error: new Error()
@@ -532,8 +532,8 @@ function test$1(n) {
       throw {
             RE_EXN_ID: "Assert_failure",
             _1: [
-              "test.ml",
-              87,
+              "test.res",
+              93,
               4
             ],
             Error: new Error()

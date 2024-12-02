@@ -71,9 +71,9 @@ function Make(funarg) {
     if (mult === 0) {
       return b;
     } else {
-      return Curry._3(M.update, x, (function (m) {
-                    if (m !== undefined && m !== 1 && m > mult) {
-                      return m - mult | 0;
+      return Curry._3(M.update, x, (function (x) {
+                    if (x !== undefined && x !== 1 && x > mult) {
+                      return x - mult | 0;
                     }
                     
                   }), b);
@@ -229,9 +229,9 @@ function Make(funarg) {
         throw {
               RE_EXN_ID: "Assert_failure",
               _1: [
-                "bag.ml",
-                185,
-                6
+                "bag.res",
+                256,
+                8
               ],
               Error: new Error()
             };
