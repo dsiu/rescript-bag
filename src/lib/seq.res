@@ -23,20 +23,20 @@ and t<'a> = unit => node<'a>
 
 let empty = () => Nil
 
-let return = (x, ()) => Cons(x, empty)
+let return = x => Cons(x, empty)
 
 let cons = (x, next, ()) => Cons(x, next)
 
 let rec append = (seq1, seq2, ()) =>
   switch seq1() {
   | Nil => seq2()
-  | Cons(x, next) => Cons(x, append(next, seq2))
+  | Cons(x, next) => Cons(x, append(next, seq2, _))
   }
 
 let rec map = (f, seq, ()) =>
   switch seq() {
   | Nil => Nil
-  | Cons(x, next) => Cons(f(x), map(f, next))
+  | Cons(x, next) => Cons(f(x), map(f, next, _))
   }
 
 let rec filter_map = (f, seq, ()) =>
@@ -45,7 +45,7 @@ let rec filter_map = (f, seq, ()) =>
   | Cons(x, next) =>
     switch f(x) {
     | None => filter_map(f, next, ())
-    | Some(y) => Cons(y, filter_map(f, next))
+    | Some(y) => Cons(y, filter_map(f, next, _))
     }
   }
 
@@ -54,7 +54,7 @@ let rec filter = (f, seq, ()) =>
   | Nil => Nil
   | Cons(x, next) =>
     if f(x) {
-      Cons(x, filter(f, next))
+      Cons(x, filter(f, next, _))
     } else {
       filter(f, next, ())
     }
@@ -63,13 +63,13 @@ let rec filter = (f, seq, ()) =>
 let rec concat = (seq, ()) =>
   switch seq() {
   | Nil => Nil
-  | Cons(x, next) => append(x, concat(next), ())
+  | Cons(x, next) => append(x, concat(next, _), ())
   }
 
 let rec flat_map = (f, seq, ()) =>
   switch seq() {
   | Nil => Nil
-  | Cons(x, next) => append(f(x), flat_map(f, next), ())
+  | Cons(x, next) => append(f(x), flat_map(f, next, _), ())
   }
 
 let concat_map = flat_map
@@ -93,7 +93,7 @@ let rec iter = (f, seq) =>
 let rec unfold = (f, u, ()) =>
   switch f(u) {
   | None => Nil
-  | Some(x, u') => Cons(x, unfold(f, u'))
+  | Some(x, u') => Cons(x, unfold(f, u', _))
   }
 
 let is_empty = xs =>
@@ -246,7 +246,7 @@ let rec compare = (cmp, xs, ys) =>
 
 let rec init_aux = (f, i, j, ()) =>
   if i < j {
-    Cons(f(i), init_aux(f, i + 1, j))
+    Cons(f(i), init_aux(f, i + 1, j, _))
   } else {
     Nil
   }
@@ -255,18 +255,18 @@ let init = (n, f) =>
   if n < 0 {
     invalid_arg("Seq.init")
   } else {
-    init_aux(f, 0, n)
+    init_aux(f, 0, n, _)
   }
 
-let rec repeat = (x, ()) => Cons(x, repeat(x))
+let rec repeat = (x, ()) => Cons(x, repeat(x, _))
 
-let rec forever = (f, ()) => Cons(f(), forever(f))
+let rec forever = (f, ()) => Cons(f(), forever(f, _))
 
 /* This preliminary definition of [cycle] requires the sequence [xs]
    to be nonempty. Applying it to an empty sequence would produce a
    sequence that diverges when it is forced. */
 
-let rec cycle_nonempty = (xs, ()) => append(xs, cycle_nonempty(xs), ())
+let rec cycle_nonempty = (xs, ()) => append(xs, cycle_nonempty(xs, _), ())
 
 /* [cycle xs] checks whether [xs] is empty and, if so, returns an empty
    sequence. Otherwise, [cycle xs] produces one copy of [xs] followed
@@ -276,7 +276,7 @@ let rec cycle_nonempty = (xs, ()) => append(xs, cycle_nonempty(xs), ())
 let cycle = (xs, ()) =>
   switch xs() {
   | Nil => Nil
-  | Cons(x, xs') => Cons(x, append(xs', cycle_nonempty(xs)))
+  | Cons(x, xs') => Cons(x, append(xs', cycle_nonempty(xs, _), _))
   }
 
 /* [iterate1 f x] is the sequence [f x, f (f x), ...].
@@ -285,7 +285,7 @@ let cycle = (xs, ()) =>
 
 let rec iterate1 = (f, x, ()) => {
   let y = f(x)
-  Cons(y, iterate1(f, y))
+  Cons(y, iterate1(f, y, _))
 }
 
 /* [iterate f x] is the sequence [x, f x, ...]. */
@@ -297,15 +297,15 @@ let rec iterate1 = (f, x, ()) => {
    second argument of the sequence, [f x], when the first argument is
    requested by the user. */
 
-let iterate = (f, x) => cons(x, iterate1(f, x))
+let iterate = (f, x) => cons(x, iterate1(f, x, _), _)
 
 let rec mapi_aux = (f, i, xs, ()) =>
   switch xs() {
   | Nil => Nil
-  | Cons(x, xs) => Cons(f(i, x), mapi_aux(f, i + 1, xs))
+  | Cons(x, xs) => Cons(f(i, x), mapi_aux(f, i + 1, xs, _))
   }
 
-@inline let mapi = (f, xs) => mapi_aux(f, 0, xs)
+@inline let mapi = (f, xs) => mapi_aux(f, 0, xs, _)
 
 /* [tail_scan f s xs] is equivalent to [tail (scan f s xs)].
  [tail_scan] is used as a building block in the definition of [scan]. */
@@ -318,10 +318,10 @@ let rec tail_scan = (f, s, xs, ()) =>
   | Nil => Nil
   | Cons(x, xs) =>
     let s = f(s, x)
-    Cons(s, tail_scan(f, s, xs))
+    Cons(s, tail_scan(f, s, xs, _))
   }
 
-let scan = (f, s, xs) => cons(s, tail_scan(f, s, xs))
+let scan = (f, s, xs) => cons(s, tail_scan(f, s, xs, _), _)
 
 /* [take] is defined in such a way that [take 0 xs] returns [empty]
  immediately, without allocating any memory. */
@@ -377,7 +377,7 @@ let rec take_while = (p, xs, ()) =>
   | Nil => Nil
   | Cons(x, xs) =>
     if p(x) {
-      Cons(x, take_while(p, xs))
+      Cons(x, take_while(p, xs, _))
     } else {
       Nil
     }
@@ -397,7 +397,8 @@ let rec drop_while = (p, xs, ()) =>
 let rec group = (eq, xs, ()) =>
   switch xs() {
   | Nil => Nil
-  | Cons(x, xs) => Cons(cons(x, take_while(eq(x), xs)), group(eq, drop_while(eq(x), xs)))
+  | Cons(x, xs) =>
+    Cons(cons(x, take_while(eq(x), xs, _), _), group(eq, drop_while(eq(x), xs, _), _))
   }
 
 exception Forced_twice
@@ -460,7 +461,7 @@ let rec zip = (xs, ys, ()) =>
   | Cons(x, xs) =>
     switch ys() {
     | Nil => Nil
-    | Cons(y, ys) => Cons((x, y), zip(xs, ys))
+    | Cons(y, ys) => Cons((x, y), zip(xs, ys, _))
     }
   }
 
@@ -470,14 +471,14 @@ let rec map2 = (f, xs, ys, ()) =>
   | Cons(x, xs) =>
     switch ys() {
     | Nil => Nil
-    | Cons(y, ys) => Cons(f(x, y), map2(f, xs, ys))
+    | Cons(y, ys) => Cons(f(x, y), map2(f, xs, ys, _))
     }
   }
 
 let rec interleave = (xs, ys, ()) =>
   switch xs() {
   | Nil => ys()
-  | Cons(x, xs) => Cons(x, interleave(ys, xs))
+  | Cons(x, xs) => Cons(x, interleave(ys, xs, _))
   }
 
 /* [sorted_merge1l cmp x xs ys] is equivalent to
@@ -506,9 +507,9 @@ and sorted_merge1r = (cmp, xs, y, ys, ()) =>
 
 and sorted_merge1 = (cmp, x, xs, y, ys) =>
   if cmp(x, y) <= 0 {
-    Cons(x, sorted_merge1r(cmp, xs, y, ys))
+    Cons(x, sorted_merge1r(cmp, xs, y, ys, _))
   } else {
-    Cons(y, sorted_merge1l(cmp, x, xs, ys))
+    Cons(y, sorted_merge1l(cmp, x, xs, ys, _))
   }
 
 let sorted_merge = (cmp, xs, ys, ()) =>
@@ -522,16 +523,16 @@ let sorted_merge = (cmp, xs, ys, ()) =>
 let rec map_fst = (xys, ()) =>
   switch xys() {
   | Nil => Nil
-  | Cons((x, _), xys) => Cons(x, map_fst(xys))
+  | Cons((x, _), xys) => Cons(x, map_fst(xys, _))
   }
 
 let rec map_snd = (xys, ()) =>
   switch xys() {
   | Nil => Nil
-  | Cons((_, y), xys) => Cons(y, map_snd(xys))
+  | Cons((_, y), xys) => Cons(y, map_snd(xys, _))
   }
 
-let unzip = xys => (map_fst(xys), map_snd(xys))
+let unzip = xys => (map_fst(xys, _), map_snd(xys, _))
 
 let split = unzip
 
@@ -543,7 +544,7 @@ let rec filter_map_find_left_map = (f, xs, ()) =>
   | Nil => Nil
   | Cons(x, xs) =>
     switch f(x) {
-    | Either.Left(y) => Cons(y, filter_map_find_left_map(f, xs))
+    | Either.Left(y) => Cons(y, filter_map_find_left_map(f, xs, _))
     | Either.Right(_) => filter_map_find_left_map(f, xs, ())
     }
   }
@@ -554,13 +555,16 @@ let rec filter_map_find_right_map = (f, xs, ()) =>
   | Cons(x, xs) =>
     switch f(x) {
     | Either.Left(_) => filter_map_find_right_map(f, xs, ())
-    | Either.Right(z) => Cons(z, filter_map_find_right_map(f, xs))
+    | Either.Right(z) => Cons(z, filter_map_find_right_map(f, xs, _))
     }
   }
 
-let partition_map = (f, xs) => (filter_map_find_left_map(f, xs), filter_map_find_right_map(f, xs))
+let partition_map = (f, xs) => (
+  filter_map_find_left_map(f, xs, _),
+  filter_map_find_right_map(f, xs, _),
+)
 
-let partition = (p, xs) => (filter(p, xs), filter(x => !p(x), xs))
+let partition = (p, xs) => (filter(p, xs, _), filter(x => !p(x), xs, _))
 
 /* If [xss] is a matrix (a sequence of rows), then [peel xss] is a pair of
    the first column (a sequence of elements) and of the remainder of the
@@ -571,15 +575,15 @@ let partition = (p, xs) => (filter(p, xs), filter(x => !p(x), xs))
 /* Because [peel] uses [unzip], its argument must be persistent. The same
  remark applies to [transpose], [diagonals], [product], etc. */
 
-let peel = xss => unzip(filter_map(uncons, xss))
+let peel = xss => unzip(filter_map(uncons, xss, _))
 
 let rec transpose = (xss, ()) => {
   let (heads, tails) = peel(xss)
   if is_empty(heads) {
-    assert is_empty(tails)
+    assert(is_empty(tails))
     Nil
   } else {
-    Cons(heads, transpose(tails))
+    Cons(heads, transpose(tails, _))
   }
 }
 
@@ -599,13 +603,13 @@ let rec diagonals = (remainders, xss, ()) =>
              tails], which means that we have one more remaining row, [xs],
              and that we keep the tails of the pre-existing remaining rows. */
       let (heads, tails) = peel(remainders)
-      Cons(cons(x, heads), diagonals(cons(xs, tails), xss))
+      Cons(cons(x, heads, _), diagonals(cons(xs, tails, _), xss, _))
     | Nil =>
       /* We discover a new empty row. In this case, the new diagonal is
              just [heads], and [remainders] is instantiated with just [tails],
              as we do not have one more remaining row. */
       let (heads, tails) = peel(remainders)
-      Cons(heads, diagonals(tails, xss))
+      Cons(heads, diagonals(tails, xss, _))
     }
   | Nil =>
     /* There are no more rows to be discovered. There remains to exhaust
@@ -626,9 +630,9 @@ let rec diagonals = (remainders, xss, ()) =>
    - The matrix [xss] is not required to be finite (in either direction).
    - The matrix [xss] must be persistent. */
 
-let diagonals = xss => diagonals(empty, xss)
+let diagonals = xss => diagonals(empty, xss, _)
 
-let map_product = (f, xs, ys) => concat(diagonals(map(x => map(y => f(x, y), ys), xs)))
+let map_product = (f, xs, ys) => concat(diagonals(map(x => map(y => f(x, y), ys, _), xs, _)), _)
 
 let product = (xs, ys) => map_product((x, y) => (x, y), xs, ys)
 
@@ -653,4 +657,4 @@ let to_dispenser = xs => {
     }
 }
 
-let rec ints = (i, ()) => Cons(i, ints(i + 1))
+let rec ints = (i, ()) => Cons(i, ints(i + 1, _))

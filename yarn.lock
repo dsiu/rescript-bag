@@ -991,6 +991,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rescript/core@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "@rescript/core@npm:1.6.1"
+  peerDependencies:
+    rescript: ">=11.1.0"
+  checksum: 10c0/04e7fc14dc050de0a9da8eb0642fb0800bc80c8978ef79aada1823bc2080b47a4d40c1168c63b53642009935342a4feb833fc190a71aa45e83af5d896269b95d
+  languageName: node
+  linkType: hard
+
 "@ryyppy/rescript-promise@npm:^2.1.0":
   version: 2.1.0
   resolution: "@ryyppy/rescript-promise@npm:2.1.0"
@@ -4923,21 +4932,23 @@ __metadata:
   resolution: "rescript-bag@workspace:."
   dependencies:
     "@glennsl/rescript-jest": "npm:^0.9.1"
+    "@rescript/core": "npm:^1.6.1"
     esbuild-jest: "npm:^0.5.0"
     jest: "npm:^28.1.2"
-    rescript: "npm:^10.0.0"
+    rescript: "npm:^12.0.0-alpha.5"
   languageName: unknown
   linkType: soft
 
-"rescript@npm:^10.0.0":
-  version: 10.1.4
-  resolution: "rescript@npm:10.1.4"
+"rescript@npm:^12.0.0-alpha.5":
+  version: 12.0.0-alpha.5
+  resolution: "rescript@npm:12.0.0-alpha.5"
   bin:
-    bsc: bsc
-    bsrefmt: bsrefmt
+    bsc: cli/bsc
     bstracing: lib/bstracing
-    rescript: rescript
-  checksum: 10c0/2549750314c865beed52f3fe828ca653386c784e053e640e011ef8165594757702abfe080f4ead5b0c95c3f577b1dd98a3df937e8e5256d69bc6bb13c8e31124
+    rescript: cli/rescript
+    rescript-tools: cli/rescript-tools
+    rewatch: cli/rewatch
+  checksum: 10c0/49977ce3bf4f016e8f00fa5b769d0fff100b8a425fb2bd1a8e4cb3fc35dfd2dd7928e06e514ea53f0f44a8c1e61bf26901280719568deee96a88c964ba74bc5b
   languageName: node
   linkType: hard
 

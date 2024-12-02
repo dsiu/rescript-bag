@@ -16,26 +16,34 @@
 module Make = (
   X: {
     type t
-    let compare: (t, t) => int
+    let cmp: (t, t) => int
   },
 ) => {
-  module M = Map.Make(X)
+  module M = Belt.Map
+  module KEY = Belt.Id.MakeComparableU(X)
 
   type elt = X.t
+  type t = M.t<KEY.t, int, KEY.identity>
 
   @ocaml.doc(" invariant: multiplicities are all > 0 ")
-  type t = M.t<int>
+  let empty = Belt.Map.make(~id=module(KEY))
 
-  let empty = M.empty
+  let is_empty = b => M.isEmpty(b)
 
-  let is_empty = M.is_empty
+  let mem = (elt, b) => b->M.has(elt)
 
-  let mem = M.mem
+  let find = (x, b) => {
+    b->M.findFirstBy((k, v) => k == x)
+  }
 
-  let occ = (x, b) =>
-    try M.find(x, b) catch {
-    | Not_found => 0
-    }
+  let occ = (x, b) => {
+    find(x, b)->Option.mapOr(0, ((k, v)) => v)
+    //    let o = find(x, b)
+    //    switch o {
+    //    | Some((k, v)) => v
+    //    | None => 0
+    //    }
+  }
 
   let add = (x, ~mult=1, b) => {
     if mult < 0 {
@@ -44,11 +52,10 @@ module Make = (
     if mult == 0 {
       b
     } else {
-      try {
-        let m = M.find(x, b)
-        M.add(x, m + mult, b)
-      } catch {
-      | Not_found => M.add(x, mult, b)
+      let m = find(x, b)
+      switch m {
+      | Some((k, v)) => M.set(b, x, v + mult)
+      | None => M.set(b, x, mult)
       }
     }
   }
@@ -70,10 +77,10 @@ module Make = (
         Some(m)
       }
     }
-    M.update(x, f, b)
+    M.update(b, x, f)
   }
 
-  let singleton = x => M.add(x, 1, M.empty)
+  let singleton = x => M.set(empty, x, 1)
 
   let remove = (x, ~mult=1, b) => {
     if mult < 0 {
@@ -82,20 +89,17 @@ module Make = (
     if mult == 0 {
       b
     } else {
-      M.update(
-        x,
-        x =>
-          switch x {
-          | None | Some(1) => None
-          | Some(m) if m <= mult => None
-          | Some(m) => Some(m - mult)
-          },
-        b,
+      M.update(b, x, x =>
+        switch x {
+        | None | Some(1) => None
+        | Some(m) if m <= mult => None
+        | Some(m) => Some(m - mult)
+        }
       )
     }
   }
 
-  let remove_all = M.remove
+  let remove_all = (elt, b) => b->M.remove(elt)
 
   let merge = (f, b1, b2) => {
     let f = (x, o1, o2) => {
@@ -117,42 +121,53 @@ module Make = (
         Some(m)
       }
     }
-    M.merge(f, b1, b2)
+    M.merge(b1, b2, f)
   }
 
-  let cardinal = b => M.fold((_, m, c) => m + c, b, 0)
+  let cardinal = b => M.reduce(b, 0, (acc, _, m) => m + acc)
 
-  let elements = M.bindings
+  let elements = M.toList(_)
 
-  let min_elt = M.min_binding
+  let min_elt_opt = b => {
+    b->M.minKey->Option.map(k => (k, b->M.getExn(k)))
+  }
 
-  let min_elt_opt = M.min_binding_opt
+  let min_elt = b => {
+    b->min_elt_opt->Option.getExn
+  }
 
-  let max_elt = M.max_binding
+  let max_elt_opt = b => {
+    b->M.maxKey->Option.map(k => (k, b->M.getExn(k)))
+  }
 
-  let max_elt_opt = M.max_binding_opt
+  let max_elt = b => {
+    b->max_elt_opt->Option.getExn
+  }
 
-  let choose = M.choose
+  // Not used
+  //  let choose = M.choose
+  //  let choose_opt = M.choose_opt
 
-  let choose_opt = M.choose_opt
-
-  let union = (b1, b2) => M.merge((_, o1, o2) =>
+  let union = (b1, b2) =>
+    M.merge(b1, b2, (_, o1, o2) =>
       switch (o1, o2) {
       | (None, None) => None
       | (None, Some(m)) | (Some(m), None) => Some(m)
       | (Some(m1), Some(m2)) => Some(max(m1, m2))
       }
-    , b1, b2)
+    )
 
-  let sum = (b1, b2) => M.merge((_, o1, o2) =>
+  let sum = (b1, b2) =>
+    M.merge(b1, b2, (_, o1, o2) =>
       switch (o1, o2) {
       | (None, None) => None
       | (None, Some(m)) | (Some(m), None) => Some(m)
       | (Some(m1), Some(m2)) => Some(m1 + m2)
       }
-    , b1, b2)
+    )
 
-  let inter = (b1, b2) => M.merge((_, o1, o2) =>
+  let inter = (b1, b2) =>
+    M.merge(b1, b2, (_, o1, o2) =>
       switch (o1, o2) {
       | (None, None)
       | (None, Some(_))
@@ -160,35 +175,36 @@ module Make = (
         None
       | (Some(m1), Some(m2)) => Some(min(m1, m2))
       }
-    , b1, b2)
+    )
 
-  let diff = (b1, b2) => M.merge((_, o1, o2) =>
+  let diff = (b1, b2) =>
+    M.merge(b1, b2, (_, o1, o2) =>
       switch (o1, o2) {
       | (None, _) => None
       | (Some(m), None) => Some(m)
       | (Some(m1), Some(m2)) if m1 <= m2 => None
       | (Some(m1), Some(m2)) => Some(m1 - m2)
       }
-    , b1, b2)
+    )
 
-  let disjoint = (b1, b2) => M.for_all((x1, _) => !mem(x1, b2), b1)
+  let disjoint = (b1, b2) => M.every(b1, (x1, _) => !(b2->M.has(x1)))
 
-  let included = (b1, b2) => M.for_all((x1, m1) => m1 <= occ(x1, b2), b1)
+  let included = (b1, b2) => M.every(b1, (x1, m1) => m1 <= occ(x1, b2))
 
-  let iter = M.iter
+  //  let iter = M.iter
 
-  let fold = M.fold
+  let fold = (f, b, acc) => M.reduce(b, acc, (acc, k, v) => f(k, v, acc))
 
-  let for_all = M.for_all
+  let for_all = (f, b) => b->M.every(f)
 
-  let exists = M.exists
+  let exists = (f, b) => b->M.some(f)
 
-  let filter = M.filter
+  let filter = (f, b) => b->M.keep(f)
 
-  let partition = M.partition
+  let partition = (f, b) => b->M.partition(f)
 
   let split = (x, b) => {
-    let (l, m, r) = M.split(x, b)
+    let ((l, r), m) = M.split(b, x)
     (
       l,
       switch m {
@@ -199,15 +215,17 @@ module Make = (
     )
   }
 
-  let find_first = M.find_first
+  let find_first_opt = (f, b) => {
+    b->M.findFirstBy((k, v) => f(k))
+  }
 
-  let find_first_opt = M.find_first_opt
+  let find_first = (f, b) => find_first_opt(f, b)->Option.getExn
 
-  let find_last = M.find_last
+  // NOT implmented
+  //  let find_last = M.find_last
+  //  let find_last_opt = M.find_last_opt
 
-  let find_last_opt = M.find_last_opt
-
-  let map = f => {
+  let map = (f, b) => {
     let f = m => {
       let m = f(m)
       if m <= 0 {
@@ -215,10 +233,10 @@ module Make = (
       }
       m
     }
-    M.map(f)
+    b->M.map(f)
   }
 
-  let mapi = f => {
+  let mapi = (f, b) => {
     let f = (x, m) => {
       let m = f(x, m)
       if m <= 0 {
@@ -226,7 +244,7 @@ module Make = (
       }
       m
     }
-    M.mapi(f)
+    b->M.mapWithKey(f)
   }
 
   let mul = (b, n) => {
@@ -253,7 +271,7 @@ module Make = (
           min(q, m1 / m2)
         }
         let q = fold(update, b1, max_int)
-        assert (q > 0)
+        assert(q > 0)
         let remainder = (x, m1, r) => {
           let mult = m1 - q * occ(x, b2)
           add(~mult, x, r)
@@ -273,9 +291,11 @@ module Make = (
     fold(update, b, (empty, empty))
   }
 
-  let compare = M.compare(Pervasives.compare)
+  let compare = (b1, b2) => M.cmp(b1, b2, (v1, v2) => v2 - v1)
+  //(Pervasives.compare)
 
-  let equal = M.equal(\"==")
+  let equal = (b1, b2) => M.eq(b1, b2, (v1, v2) => v1 == v2)
+  //M.equal(\"==")
 
   /* let to_seq = */
   /* M.to_seq */

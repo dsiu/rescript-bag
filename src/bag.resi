@@ -46,7 +46,7 @@ module Make: (
 
     @ocaml.doc(" Bags are implemented using [Map.Make] and therefore require elements
       to be comparable. ")
-    let compare: (t, t) => int
+    let cmp: (t, t) => int
   },
 ) =>
 {
@@ -128,16 +128,16 @@ module Make: (
       empty. ")
   let max_elt_opt: t => option<(elt, int)>
 
-  @ocaml.doc(" Returns one element of the given bag with its multiplicity, or
-      raises [Not_found] if the bag is empty. Which binding is chosen
-      is unspecified, but equal elements will be chosen for equal
-      bags. ")
-  let choose: t => (elt, int)
+  //  @ocaml.doc(" Returns one element of the given bag with its multiplicity, or
+  //      raises [Not_found] if the bag is empty. Which binding is chosen
+  //      is unspecified, but equal elements will be chosen for equal
+  //      bags. ")
+  //  let choose: t => (elt, int)
 
-  @ocaml.doc(" Returns one element of the given bag, or [None] if
-      the set is empty. Which element is chosen is unspecified,
-      but equal elements will be chosen for equal bags. ")
-  let choose_opt: t => option<(elt, int)>
+  //  @ocaml.doc(" Returns one element of the given bag, or [None] if
+  //      the set is empty. Which element is chosen is unspecified,
+  //      but equal elements will be chosen for equal bags. ")
+  //  let choose_opt: t => option<(elt, int)>
 
   @ocaml.doc(" [union b1 b2] returns a new bag [b] where, for all element x,
       [occ x b = max (occ x b1) (occ x b2)]. ")
@@ -176,11 +176,11 @@ module Make: (
       [occ x b1 <= occ x b2]. ")
   let included: (t, t) => bool
 
-  @ocaml.doc(" [iter f b] applies [f] to all elements in bag [b].  [f] receives the
-      element as first argument, and its multiplicity as second argument.
-      The elements are  passed to [f] in increasing order with respect to
-      the ordering over the type of the elements. ")
-  let iter: ((elt, int) => unit, t) => unit
+  //  @ocaml.doc(" [iter f b] applies [f] to all elements in bag [b].  [f] receives the
+  //      element as first argument, and its multiplicity as second argument.
+  //      The elements are  passed to [f] in increasing order with respect to
+  //      the ordering over the type of the elements. ")
+  //  let iter: ((elt, int) => unit, t) => unit
 
   @ocaml.doc(" [fold f b a] computes [(f xN mN ... (f x1 m1 a)...)] , where [x1 ... xN]
       are the elements in bag [b] (in increasing order), and [m1 ... mN] are
@@ -223,15 +223,15 @@ module Make: (
      such that [f x], or [None] if no such key exists. ")
   let find_first_opt: (elt => bool, t) => option<(elt, int)>
 
-  @ocaml.doc(" [find_last f b], where [f] is a monotonically decreasing function,
-     returns the largest element [x] of [b] such that [f x],
-     or raises [Not_found] if no such key exists. ")
-  let find_last: (elt => bool, t) => (elt, int)
+  //  @ocaml.doc(" [find_last f b], where [f] is a monotonically decreasing function,
+  //     returns the largest element [x] of [b] such that [f x],
+  //     or raises [Not_found] if no such key exists. ")
+  //  let find_last: (elt => bool, t) => (elt, int)
 
-  @ocaml.doc(" [find_last_opt f b], where [f] is a monotonically decreasing function,
-     returns an option containing the largest element [x] of [m]
-     such that [f x], or [None] if no such key exists. ")
-  let find_last_opt: (elt => bool, t) => option<(elt, int)>
+  //  @ocaml.doc(" [find_last_opt f b], where [f] is a monotonically decreasing function,
+  //     returns an option containing the largest element [x] of [m]
+  //     such that [f x], or [None] if no such key exists. ")
+  // let find_last_opt: (elt => bool, t) => option<(elt, int)>
 
   @ocaml.doc(" [map f b] returns a bag with same elements as [b], where the
       multiplicity [m] of each element of [b] has been
