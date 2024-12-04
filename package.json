@@ -20,7 +20,6 @@
   "author": "Danny Siu <danny.siu@gmail.com>",
   "license": "LGPL-2.1-or-later",
   "dependencies": {
-    "@rescript/core": "^1.6.1",
     "rescript": "^12.0.0-alpha.5"
   },
   "devDependencies": {

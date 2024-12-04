@@ -14,7 +14,7 @@ function Make(funarg) {
   let empty = Belt_Map.make(KEY);
   let is_empty = Belt_Map.isEmpty;
   let mem = (elt, b) => Belt_Map.has(b, elt);
-  let find = (x, b) => Belt_Map.findFirstBy(b, (k, v) => Primitive_object.equal(k, x));
+  let find = (x, b) => Belt_Map.findFirstBy(b, (k, param) => Primitive_object.equal(k, x));
   let occ = (x, b) => Option.mapOr(find(x, b), 0, param => param[1]);
   let add = (x, multOpt, b) => {
     let mult = multOpt !== undefined ? multOpt : 1;
@@ -141,6 +141,7 @@ function Make(funarg) {
   });
   let disjoint = (b1, b2) => Belt_Map.every(b1, (x1, param) => !Belt_Map.has(b2, x1));
   let included = (b1, b2) => Belt_Map.every(b1, (x1, m1) => m1 <= occ(x1, b2));
+  let iter = (f, b) => Belt_Map.forEach(b, f);
   let fold = (f, b, acc) => Belt_Map.reduce(b, acc, (acc, k, v) => f(k, v, acc));
   let for_all = (f, b) => Belt_Map.every(b, f);
   let exists = (f, b) => Belt_Map.some(b, f);
@@ -156,8 +157,8 @@ function Make(funarg) {
       match$1[1]
     ];
   };
-  let find_first_opt = (f, b) => Belt_Map.findFirstBy(b, (k, v) => f(k));
-  let find_first = (f, b) => Option.getExn(Belt_Map.findFirstBy(b, (k, v) => f(k)), undefined);
+  let find_first_opt = (f, b) => Belt_Map.findFirstBy(b, (k, param) => f(k));
+  let find_first = (f, b) => Option.getExn(Belt_Map.findFirstBy(b, (k, param) => f(k)), undefined);
   let map = (f, b) => {
     let f$1 = m => {
       let m$1 = f(m);
@@ -279,6 +280,7 @@ function Make(funarg) {
     diff: diff,
     disjoint: disjoint,
     included: included,
+    iter: iter,
     fold: fold,
     for_all: for_all,
     exists: exists,

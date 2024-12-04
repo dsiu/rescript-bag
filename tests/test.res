@@ -75,7 +75,7 @@ let () = for n in 0 to 10 {
 let test = n => {
   let b1 = ref(B.empty)
   let b2 = ref(B.empty)
-  let random = RescriptCore.Math.Int.random
+  let random = Math.Int.random
 
   for i in 0 to n - 1 {
     b1 := B.add(~mult=random(1, 10), i, b1.contents)
