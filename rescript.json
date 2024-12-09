@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/rescript-lang/rescript-compiler/master/docs/docson/build-schema.json",
-  "name": "rescript-bag",
+  "name": "@dsiu/rescript-bag",
   "namespace": "Bag",
   "version": "0.0.1",
   "sources": [
@@ -10,8 +10,7 @@
     },
     {
       "dir": "tests",
-      "subdirs": true,
-      "type": "dev"
+      "subdirs": true
     }
   ],
   "package-specs": {

@@ -1,15 +1,14 @@
 {
-  "name": "rescript-bag",
+  "name": "@dsiu/rescript-bag",
   "version": "0.0.1",
   "type": "module",
   "engines": {
     "node": ">14.0.0"
   },
   "scripts": {
-    "clean": "rescript clean -with-deps",
-    "build": "rescript build -with-deps",
-    "watch": "rescript build -with-deps -w",
-    "start": "rescript build -w"
+    "build": "rewatch build .",
+    "watch": "rewatch watch .",
+    "clean": "rewatch clean ."
   },
   "keywords": [
     "ReScript",
@@ -20,6 +19,7 @@
   "author": "Danny Siu <danny.siu@gmail.com>",
   "license": "LGPL-2.1-or-later",
   "dependencies": {
+    "@rolandpeelen/rewatch": "^1.0.9",
     "rescript": "^12.0.0-alpha.5"
   },
   "devDependencies": {

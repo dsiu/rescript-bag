@@ -408,6 +408,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dsiu/rescript-bag@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@dsiu/rescript-bag@workspace:."
+  dependencies:
+    "@glennsl/rescript-jest": "npm:^0.9.1"
+    "@rolandpeelen/rewatch": "npm:^1.0.9"
+    esbuild-jest: "npm:^0.5.0"
+    jest: "npm:^28.1.2"
+    rescript: "npm:^12.0.0-alpha.5"
+  languageName: unknown
+  linkType: soft
+
 "@glennsl/rescript-jest@npm:^0.9.1":
   version: 0.9.2
   resolution: "@glennsl/rescript-jest@npm:0.9.2"
@@ -988,6 +1000,15 @@ __metadata:
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
   checksum: 10c0/5bd7576bb1b38a47a7fc7b51ac9f38748e772beebc56200450c4a817d712232b8f1d3ef70532c80840243c657d491cf6a6be1e3a214cff907645819fdc34aadd
+  languageName: node
+  linkType: hard
+
+"@rolandpeelen/rewatch@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "@rolandpeelen/rewatch@npm:1.0.9"
+  bin:
+    rewatch: rewatch
+  checksum: 10c0/da211feea88a7fbc31274bed317349052126ff2f99a050670cac7092e80f1a0621d7156dc0f1c4997dc6088a08cc64839b8697d0b79480416451eca558b91d85
   languageName: node
   linkType: hard
 
@@ -4917,17 +4938,6 @@ __metadata:
   checksum: 10c0/b2bfdd09db16c082c4326e573a82c0771daaf7b53b9ce8ad60ea46aa6e30aaf475fe9b164800b89f93b748d2c234d8abff945d2551ba47bf5698e04cd7713267
   languageName: node
   linkType: hard
-
-"rescript-bag@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "rescript-bag@workspace:."
-  dependencies:
-    "@glennsl/rescript-jest": "npm:^0.9.1"
-    esbuild-jest: "npm:^0.5.0"
-    jest: "npm:^28.1.2"
-    rescript: "npm:^12.0.0-alpha.5"
-  languageName: unknown
-  linkType: soft
 
 "rescript@npm:^12.0.0-alpha.5":
   version: 12.0.0-alpha.5

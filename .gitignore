@@ -43,3 +43,27 @@ setup.log
 
 # Local OPAM switch
 _opam/
+
+
+.DS_Store
+lib/bs
+lib/ocaml
+
+npm-debug.log
+.vscode
+
+.merlin
+.bsb.lock
+rewatch.lock
+
+node_modules/
+package-lock.json
+
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+coverage/
