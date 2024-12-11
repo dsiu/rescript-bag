@@ -8,7 +8,8 @@
   "scripts": {
     "build": "rewatch build .",
     "watch": "rewatch watch .",
-    "clean": "rewatch clean ."
+    "clean": "rewatch clean .",
+    "test": "node tests/test.mjs"
   },
   "keywords": [
     "ReScript",
@@ -23,7 +24,7 @@
     "rescript": "^12.0.0-alpha.5"
   },
   "devDependencies": {
-    "@glennsl/rescript-jest": "^0.9.1",
+    "@glennsl/rescript-jest": "github:dsiu/rescript-jest#rescript-v12",
     "esbuild-jest": "^0.5.0",
     "jest": "^28.1.2"
   },
