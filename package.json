@@ -21,7 +21,7 @@
   "license": "LGPL-2.1-or-later",
   "dependencies": {
     "@rolandpeelen/rewatch": "^1.0.9",
-    "rescript": "^12.0.0-alpha.5"
+    "rescript": "^12.0.0-alpha.6"
   },
   "devDependencies": {
     "@glennsl/rescript-jest": "github:dsiu/rescript-jest#rescript-v12",
@@ -45,5 +45,5 @@
       "mjs"
     ]
   },
-  "packageManager": "yarn@4.5.3"
+  "packageManager": "yarn@4.6.0"
 }
