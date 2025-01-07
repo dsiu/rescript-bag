@@ -21,12 +21,12 @@
   "license": "LGPL-2.1-or-later",
   "dependencies": {
     "@rolandpeelen/rewatch": "^1.0.9",
-    "rescript": "^12.0.0-alpha.6"
+    "rescript": "^12.0.0-alpha.7"
   },
   "devDependencies": {
     "@glennsl/rescript-jest": "github:dsiu/rescript-jest#rescript-v12",
     "esbuild-jest": "^0.5.0",
-    "jest": "^28.1.2"
+    "jest": "^29.7.0"
   },
   "jest": {
     "testMatch": [
