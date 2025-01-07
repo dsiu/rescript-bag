@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/rescript-bag.iml" filepath="$PROJECT_DIR$/rescript-bag.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/rescript-bag.iml" filepath="$PROJECT_DIR$/.idea/rescript-bag.iml" />
     </modules>
   </component>
 </project>
