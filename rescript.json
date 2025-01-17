@@ -17,7 +17,7 @@
     "module": "esmodule",
     "in-source": true
   },
-  "suffix": ".mjs",
+  "suffix": ".res.mjs",
   "bs-dependencies": [
   ],
   "bs-dev-dependencies": [
