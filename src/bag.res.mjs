@@ -186,7 +186,7 @@ function Make(funarg) {
     if (n === 0) {
       return empty;
     } else {
-      return map(m => Math.imul(m, n), b);
+      return map(m => m * n | 0, b);
     }
   };
   let div = (b1, b2) => {
@@ -220,7 +220,7 @@ function Make(funarg) {
         };
       }
       let remainder = (x, m1, r) => {
-        let mult = m1 - Math.imul(q, occ(x, b2)) | 0;
+        let mult = m1 - (q * occ(x, b2) | 0) | 0;
         return add(x, mult, r);
       };
       let r = fold(remainder, b1, empty);
