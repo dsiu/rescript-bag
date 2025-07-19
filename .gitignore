@@ -8,6 +8,7 @@
 .merlin
 .bsb.lock
 /lib/bs/
+rescript.lock
 
 # node
 npm-debug.log
