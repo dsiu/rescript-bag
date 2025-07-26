@@ -18,9 +18,9 @@
     "in-source": true
   },
   "suffix": ".res.mjs",
-  "bs-dependencies": [
+  "dependencies": [
   ],
-  "bs-dev-dependencies": [
+  "dev-dependencies": [
   ],
   "warnings": {
     "error": "+101",
