@@ -58,7 +58,6 @@ function Make(funarg) {
         if (x !== undefined && x !== 1 && x > mult) {
           return x - mult | 0;
         }
-        
       });
     }
   };
@@ -123,7 +122,6 @@ function Make(funarg) {
     if (o1 !== undefined && o2 !== undefined) {
       return Primitive_option.some(Primitive_object.min(Primitive_option.valFromOption(o1), Primitive_option.valFromOption(o2)));
     }
-    
   });
   let diff = (b1, b2) => Belt_Map.merge(b1, b2, (param, o1, o2) => {
     if (o1 !== undefined) {
@@ -137,7 +135,6 @@ function Make(funarg) {
         return o1;
       }
     }
-    
   });
   let disjoint = (b1, b2) => Belt_Map.every(b1, (x1, param) => !Belt_Map.has(b2, x1));
   let included = (b1, b2) => Belt_Map.every(b1, (x1, m1) => m1 <= occ(x1, b2));

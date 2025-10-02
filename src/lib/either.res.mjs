@@ -28,7 +28,6 @@ function find_left(x) {
   if (x.TAG === "Left") {
     return Primitive_option.some(x._0);
   }
-  
 }
 
 function find_right(x) {

@@ -340,7 +340,6 @@ function test(n) {
         Error: new Error()
       };
     }
-    
   }
   if (!B.mem(n, b1)) {
     throw {
@@ -462,7 +461,6 @@ function test(n) {
       Error: new Error()
     };
   }
-  
 }
 
 for (let n = 0; n <= 10; ++n) {
@@ -514,7 +512,6 @@ function test$1(n) {
         Error: new Error()
       };
     }
-    
   }
 }
 
