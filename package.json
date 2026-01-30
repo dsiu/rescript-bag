@@ -25,6 +25,10 @@
       "<rootDir>/**/**/*.test.res.(js|jsx|ts|tsx|res.mjs)",
       "<rootDir>/**/*_Test.res.(js|jsx|ts|tsx|mjs)"
     ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/lib/"
+    ],
     "transform": {
       "^.+\\.m?jsx?$": [
         "babel-jest",
