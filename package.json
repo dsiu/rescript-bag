@@ -11,7 +11,7 @@
   "engines": {
     "node": ">14.0.0"
   },
-  "packageManager": "yarn@4.12.0",
+  "packageManager": "yarn@4.13.0",
   "keywords": [
     "ReScript",
     "OCaml",
@@ -56,7 +56,7 @@
     ]
   },
   "peerDependencies": {
-    "rescript": "^12.2.0-rc.1"
+    "rescript": "^12.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
@@ -64,6 +64,6 @@
     "@glennsl/rescript-jest": "github:dsiu/rescript-jest#rescript-v12-wip",
     "babel-jest": "^27.3.1",
     "jest": "^27.3.1",
-    "rescript": "^12.2.0-rc.1"
+    "rescript": "^12.2.0"
   }
 }
